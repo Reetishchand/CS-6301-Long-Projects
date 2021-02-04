@@ -13,7 +13,7 @@ public class Num {
 	public void printList() {}
 	public Num evaluatePostfix(String[] expr);
 	public Num evaluateExp(String[] expr);
-	
+	public static void main(String args][]) {}
 	
 	
 }

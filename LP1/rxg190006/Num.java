@@ -3,6 +3,7 @@ package LP1.rxg190006;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Stack;
 
 public class Num {
 	
@@ -39,8 +40,47 @@ public class Num {
 		}
 		System.out.println();
 	}
-	
-	
+	public static Num evaluatePostFix(String[] postFixArr) {
+		Stack<Num> numberStack = new Stack<>();
+		for (int i = 0;i<postFixArr.length;i++) {
+			char current = postFixArr[i].charAt(0);
+			if(Character.isDigit(current))
+				numberStack.push(new Num(new Long(current)));
+			else {
+				Num n1 = numberStack.pop();
+				Num n2 = numberStack.pop();
+				switch(current) 
+                { 
+                    case '+': 
+//                    	numberStack.push(add(n1,n2)); 
+                    break; 
+                      
+                    case '-': 
+//                    	numberStack.push(subtract(n1,n2)); 
+                    break; 
+                      
+                    case '/': 
+//                    	numberStack.push(subtract(n1,n2)); 
+                    break; 
+                      
+                    case '*': 
+//                    	numberStack.push(subtract(n1,n2)); 
+                    break; 
+                    
+                    case '%': 
+//                    	numberStack.push(mod(n1,n2)); 
+                    break; 
+                      
+                    case '^': 
+//                    	numberStack.push(pow(n1,n2)); 
+                    break; 
+                        
+                    
+              } 
+			}		
+		}
+		return numberStack.pop();
+	}	
 	public static void main(String s[]) {
 		Scanner sc = new Scanner(System.in);
 //		System.out.println("Enter 3 Long Numbers ");
@@ -68,6 +108,18 @@ public class Num {
 //		System.out.println(" Result = "+modResult.printList());
 //		Num rootResult = squareRoot(z);
 //		System.out.println(" Result = "+rootResult.printList());
+		System.out.println("Enter the postfix Expression : ");
+		String postFixString = sc.next();
+		String []postFixArr = new String[postFixString.length()];
+		for(int i =0;i<postFixArr.length;i++) {
+			postFixArr[i]=postFixString.substring(i, i+1);
+		}
+		Num postFixEval = evaluatePostFix(postFixArr);
+		System.out.println(" Result = ");
+		postFixEval.printList();
+
 	}
+	
+	
 
 }

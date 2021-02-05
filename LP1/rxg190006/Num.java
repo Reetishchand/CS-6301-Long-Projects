@@ -40,6 +40,18 @@ public class Num {
 		}
 		System.out.println();
 	}
+	
+	public String toString(){
+		StringBuilder stemp = new StringBuilder();
+		if(isNumberNegative)
+			stemp.append("-");
+		for(int i=digitList.size()-1;i>=0;i--){
+			stemp.append(digitList.get(i));
+		}
+		String str=new String(stemp);
+		return str;
+	}
+	
 	public static Num evaluatePostFix(String[] postFixArr) {
 		Stack<Num> numberStack = new Stack<>();
 		for (int i = 0;i<postFixArr.length;i++) {
@@ -81,6 +93,12 @@ public class Num {
 		}
 		return numberStack.pop();
 	}	
+	private static Num evaluateExp(String[] postFixArr) {
+		return null;
+	}
+	
+	
+	
 	public static void main(String s[]) {
 		Scanner sc = new Scanner(System.in);
 //		System.out.println("Enter 3 Long Numbers ");
@@ -117,8 +135,17 @@ public class Num {
 		Num postFixEval = evaluatePostFix(postFixArr);
 		System.out.println(" Result = ");
 		postFixEval.printList();
+		
+		
+		System.out.println("Enter the  Expression : ");
+		String expression = sc.next();
+		
+		Num evalExp = evaluateExp(postFixArr);
+		System.out.println(" Result = ");
+		evalExp.printList();
 
 	}
+	
 	
 	
 

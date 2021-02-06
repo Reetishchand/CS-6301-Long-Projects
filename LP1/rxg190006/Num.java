@@ -1,3 +1,10 @@
+/*
+ *  CS 6301.002 LP-1
+ * Team Members:
+ *  Reetish Chand Guntakal Patil - RXG190006
+ * 
+ */
+
 package LP1.rxg190006;
 
 import java.util.ArrayList;
@@ -43,6 +50,19 @@ public class Num {
 		System.out.println();
 	}
 
+	public long getDigitByIndex(int index) {
+		return digitList.get(index);
+	}
+	
+	public int getItemSize() {
+		return digitList.size();
+	}
+	
+	public static Num add(Num a, Num b) {
+		return null;
+	}
+	
+	
 	public String toString() {
 		StringBuilder stemp = new StringBuilder();
 		if (isNumberNegative)

@@ -49,7 +49,15 @@ public class Num {
 		
 		System.out.println();
 	}
-
+	public static Long numToLong(Num a) {
+		 long res =0;
+		 int l=a.getItemSize();
+		 for(int i=0;i<l;i++) {
+			 res=res*10;
+			 res += a.getDigitByIndex(i);
+		 }
+		 return res;
+	 }
 	public long getDigitByIndex(int index) {
 		return digitList.get(index);
 	}
@@ -63,6 +71,46 @@ public class Num {
 	public void updateItemInIndex(int index,long newItem) {
 		digitList.set(index, newItem);
 	}
+	
+	public static Num squareRoot(Num a) {
+		Long number = numToLong(a);
+		long start = 0, end = number; 
+        long mid; 
+        double ans = 0.0;
+        while (start <= end)  
+        { 
+            mid = (start + end) / 2; 
+              
+            if (mid * mid == number)  
+            { 
+                ans = mid; 
+                break; 
+            } 
+  
+            if (mid * mid < number) { 
+                start = mid + 1; 
+                ans = mid; 
+            } 
+  
+            else { 
+                end = mid - 1; 
+            } 
+        }
+ 
+        double increment = 0.1; 
+        for (int i = 0; i < 3; i++) { 
+            while (ans * ans <= number) { 
+                ans += increment; 
+            } 
+              ans = ans - increment; 
+            increment = increment / 10; 
+        }
+        return new Num((long)Math.floor(ans));
+        
+        
+	}
+	
+	
 	
 public static Num add(Num a, Num b) {
 		
@@ -185,6 +233,14 @@ public static Num add(Num a, Num b) {
 	private static Num evaluateExp(String[] postFixArr) {
 		return null;
 	}
+	
+	
+	public static Working subtract(Num a, Num b) {
+		Long n1 = numToLong(a);
+		Long n2 = numToLong(b);
+		return new Working(n1-n2);
+	}
+
 
 	public static void main(String s[]) {
 		Scanner sc = new Scanner(System.in);

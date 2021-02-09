@@ -35,18 +35,18 @@ public class Num {
 			isNumberNegative = true;
 		}
 		digitList = new ArrayList<>();
-		long d;
-		for (int i = s.length() - 1; i >= 0; i--) {
-			d = (long) s.charAt(i);
-			digitList.add(new Long(d));
+		for(int i=s.length()-1;i>=0;i--){
+			digitList.add(Long.parseLong(s.substring(i,i+1)));
 		}
 	}
 
 	public void printList() {
 		System.out.println("Base : " + base);
-		for (Long num : digitList) {
-			System.out.print("   " + num + "   ");
+		int l = getItemSize();
+		for (int i=l-1;i>=0;i--) {
+			System.out.print("   " + digitList.get(i)+ "   ");
 		}
+		
 		System.out.println();
 	}
 
@@ -57,9 +57,77 @@ public class Num {
 	public int getItemSize() {
 		return digitList.size();
 	}
+	public void addItemToList(long item) {
+		digitList.add(item);
+	}
+	public void updateItemInIndex(int index,long newItem) {
+		digitList.set(index, newItem);
+	}
 	
-	public static Num add(Num a, Num b) {
-		return null;
+public static Num add(Num a, Num b) {
+		
+		int l1=a.getItemSize();
+		int i=0,j=0;
+		int l2=b.getItemSize();
+		Num res;
+		long carryBit=0;
+		if (l1<l2)
+			 res = b;
+		else
+			 res =a;
+		long temp;
+		while (l1>i && l2>j) {
+			temp = a.getDigitByIndex(i)+b.getDigitByIndex(j)+carryBit;
+			if (temp>9) {
+				carryBit=1;
+				temp = temp-10;
+			}
+			else {
+				carryBit=0;
+			}
+			res.updateItemInIndex(i, temp);
+			i+=1;
+			j+=1;
+					
+		}
+		while (l1>i) {
+			temp = a.getDigitByIndex(i)+carryBit;
+			if (temp>9) {
+				carryBit=1;
+				temp = temp-10;
+			}
+			else {
+				carryBit=0;
+			}
+			try {
+			res.updateItemInIndex(i, temp);
+			}
+			catch(Exception e){
+				res.addItemToList(temp);
+			}
+			i+=1;
+		}
+		
+		while (l2>j) {
+			temp = b.getDigitByIndex(j)+carryBit;
+			if (temp>9) {
+				carryBit=1;
+				temp = temp-10;
+			}
+			else {
+				carryBit=0;
+			}
+			try {
+				res.updateItemInIndex(i, temp);
+				}
+				catch(Exception e){
+					res.addItemToList(temp);
+				}
+			j+=1;
+		}
+		if(carryBit!=0)
+			res.addItemToList(carryBit);
+	return res;
 	}
 	
 	
@@ -131,8 +199,9 @@ public class Num {
 		long z = 4;
 		System.out.println("number 1 = " + x);
 		System.out.println("number 2 = " + y);
-//		Num addResult= add(x, y);
-//		System.out.println(" Result = "+addResult.printList());
+		Num addResult= add(x, y);
+		System.out.println(" Result = ");
+		addResult.printList();
 //		Num subResult = subtract(x,y);
 //		System.out.println(" Result = "+subResult.printList());
 //		Num mulResult = product(x,y);
@@ -145,22 +214,22 @@ public class Num {
 //		System.out.println(" Result = "+modResult.printList());
 //		Num rootResult = squareRoot(z);
 //		System.out.println(" Result = "+rootResult.printList());
-		System.out.println("Enter the postfix Expression : ");
-		String postFixString = sc.next();
-		String[] postFixArr = new String[postFixString.length()];
-		for (int i = 0; i < postFixArr.length; i++) {
-			postFixArr[i] = postFixString.substring(i, i + 1);
-		}
-		Num postFixEval = evaluatePostFix(postFixArr);
-		System.out.println(" Result = ");
-		postFixEval.printList();
-
-		System.out.println("Enter the  Expression : ");
-		String expression = sc.next();
-
-		Num evalExp = evaluateExp(postFixArr);
-		System.out.println(" Result = ");
-		evalExp.printList();
+//		System.out.println("Enter the postfix Expression : ");
+//		String postFixString = sc.next();
+//		String[] postFixArr = new String[postFixString.length()];
+//		for (int i = 0; i < postFixArr.length; i++) {
+//			postFixArr[i] = postFixString.substring(i, i + 1);
+//		}
+//		Num postFixEval = evaluatePostFix(postFixArr);
+//		System.out.println(" Result = ");
+//		postFixEval.printList();
+//
+//		System.out.println("Enter the  Expression : ");
+//		String expression = sc.next();
+//
+//		Num evalExp = evaluateExp(postFixArr);
+//		System.out.println(" Result = ");
+//		evalExp.printList();
 
 	}
 

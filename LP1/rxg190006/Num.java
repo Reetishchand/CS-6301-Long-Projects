@@ -43,6 +43,8 @@ public class Num {
 	public void printList() {
 		System.out.println("Base : " + base);
 		int l = getItemSize();
+		if (isNumberNegative)
+			System.out.print(" - ");
 		for (int i=l-1;i>=0;i--) {
 			System.out.print("   " + digitList.get(i)+ "   ");
 		}
@@ -52,12 +54,13 @@ public class Num {
 	public static Long numToLong(Num a) {
 		 long res =0;
 		 int l=a.getItemSize();
-		 for(int i=0;i<l;i++) {
-			 res=res*10;
-			 res += a.getDigitByIndex(i);
-		 }
+		for (int i=l-1;i>=0;i--) {
+			res = res*10 + (a.getDigitByIndex(i));
+		}
+		 System.out.println("converted : "+res);
 		 return res;
 	 }
+	
 	public long getDigitByIndex(int index) {
 		return digitList.get(index);
 	}
@@ -73,6 +76,7 @@ public class Num {
 	}
 	
 	public static Num squareRoot(Num a) {
+		a.printList();
 		Long number = numToLong(a);
 		long start = 0, end = number; 
         long mid; 
@@ -96,15 +100,9 @@ public class Num {
                 end = mid - 1; 
             } 
         }
- 
-        double increment = 0.1; 
-        for (int i = 0; i < 3; i++) { 
-            while (ans * ans <= number) { 
-                ans += increment; 
-            } 
-              ans = ans - increment; 
-            increment = increment / 10; 
-        }
+       
+       
+        System.out.println("root ans :"+ans);
         return new Num((long)Math.floor(ans));
         
         
@@ -234,33 +232,38 @@ public static Num add(Num a, Num b) {
 		return null;
 	}
 	
-	
-	public static Working subtract(Num a, Num b) {
+	public static Num subtract(Num a, Num b) {
 		Long n1 = numToLong(a);
 		Long n2 = numToLong(b);
-		return new Working(n1-n2);
+		return new Num(n1-n2);
 	}
 
+	
+	
 
 	public static void main(String s[]) {
 		Scanner sc = new Scanner(System.in);
-//		System.out.println("Enter 3 Long Numbers ");
-//		String  input1 = sc.next();
-//		long input2=sc.nextLong();
-//		Num x = new Num(input1);
-//		Num y = new Num(input2);
+		System.out.println("Enter 2 Long Numbers ");
+		String  input1 = sc.next();
+		long input2=sc.nextLong();
+		Num x ;
+		Num y ;
 //		int z =  sc.nextInt();
-		Num x = new Num("45646515649485165651651");
-		Num y = new Num(65165156);
-		long z = 4;
+//		Num x = new Num("100");
+//		Num y = new Num(125);
+		x= new Num(input1);
+		y	= new Num(input2);
 		System.out.println("number 1 = " + x);
 		System.out.println("number 2 = " + y);
 		Num addResult= add(x, y);
-		System.out.println(" Result = ");
+		System.out.println(" addition Result = ");
 		addResult.printList();
-//		Num subResult = subtract(x,y);
-//		System.out.println(" Result = "+subResult.printList());
-//		Num mulResult = product(x,y);
+		x= new Num(input1);
+		y		= new Num(input2);
+		Num subResult = subtract(x,y);
+		System.out.println(" subtraction Result = ");
+		subResult.printList();
+		//		Num mulResult = product(x,y);
 //		System.out.println(" Result = "+mulResult.printList());
 //		Num divResult= div(x, y);
 //		System.out.println(" Result = "+divResult.printList());
@@ -268,8 +271,11 @@ public static Num add(Num a, Num b) {
 //		System.out.println(" Result = "+powResult.printList());
 //		Num modResult = mod(x,y);
 //		System.out.println(" Result = "+modResult.printList());
-//		Num rootResult = squareRoot(z);
-//		System.out.println(" Result = "+rootResult.printList());
+		x= new Num(input1);
+		y	= new Num(input2);
+		Num rootResult = squareRoot(x);
+		System.out.println(" Root Result = ");
+		rootResult.printList();
 //		System.out.println("Enter the postfix Expression : ");
 //		String postFixString = sc.next();
 //		String[] postFixArr = new String[postFixString.length()];

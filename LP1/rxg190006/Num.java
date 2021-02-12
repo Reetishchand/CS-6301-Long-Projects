@@ -15,7 +15,10 @@ import java.util.Stack;
 public class Num {
 
 	public static final int base = 10;
-
+	List<Long> digitList;
+	boolean isNumberNegative = false;
+	
+	
 	public static Num add(Num a, Num b) {
 
 		int l1 = a.getItemSize();
@@ -76,7 +79,6 @@ public class Num {
 			res.addItemToList(carryBit);
 		return res;
 	}
-
 	private static Num evaluateExp(String postFixArr) {
 		return null;
 	}
@@ -171,13 +173,11 @@ public class Num {
 					System.out.println("Division");
 					if (input2 != 0) {
 //						result = division(x, y);
-					}
-					else {
+					} else {
 						result = new Num(0);
 					}
 					break;
-					
-					
+
 				case 5:
 					System.out.println("Mod");
 //					result = mod(x, y);
@@ -236,7 +236,7 @@ public class Num {
 	}
 
 	public static Num squareRoot(Num a) {
-		
+
 		Long number = numToLong(a);
 		long start = 0, end = number;
 		long mid;
@@ -326,8 +326,7 @@ public class Num {
 
 	}
 
-	List<Long> digitList;
-	boolean isNumberNegative = false;
+	
 
 	public Num(long number) {
 		if (number < 0) {

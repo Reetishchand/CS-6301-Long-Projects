@@ -79,6 +79,101 @@ public class Num {
 			res.addItemToList(carryBit);
 		return res;
 	}
+
+	public static Num product(Num a, Num b) {
+		int l1 = a.getItemSize();
+		int l2 = b.getItemSize();
+		int i = 0, j = 0;
+
+		Num res = new Num(0);
+		long carryBit = 0;
+		long temp;
+
+		//MARK: TODO - Check if a and b have the same base
+
+		if (l1 == 0 || l2 == 0) {
+			res = new Num(0);
+			return res;
+		}
+
+		while (l1 > i) {
+			while (l2 > j) {
+				temp = (a.getDigitByIndex(i) * b.getDigitByIndex(j)) + carryBit;
+				if (i > 0) {
+					try {
+						res.updateItemInIndex(i + j, temp + res.getDigitByIndex(i + j));
+					} catch (Exception e) {
+						res.addItemToList(temp);
+					}
+				}
+				else {
+					res.addItemToList(temp);
+				}
+
+				carryBit = 0;
+				int maxLimit = b.getItemSize() - 1;
+				if (j < maxLimit) {
+//					System.out.println(res.getDigitByIndex(i+j));
+					carryBit = res.getDigitByIndex(i+j) / 10;
+					if (carryBit > 0)
+						res.updateItemInIndex(i+j, res.getDigitByIndex(i+j) % 10);
+				}
+				j += 1;
+			}
+			i += 1;
+			if (l1 > i)
+				j = 0;
+		}
+
+		while (l1 > i) {
+			temp = a.getDigitByIndex(l1) + carryBit;
+			try {
+				res.updateItemInIndex(i, temp);
+			} catch (Exception e) {
+				res.addItemToList(temp);
+			}
+			carryBit = res.getDigitByIndex(l1+j) / 10;
+			i += 1;
+		}
+
+		while (l2 > j) {
+			System.out.println(b);
+			temp = b.getDigitByIndex(l2) + carryBit;
+			try {
+				res.updateItemInIndex(j, temp);
+			} catch (Exception e) {
+				res.addItemToList(temp);
+			}
+			carryBit = res.getDigitByIndex(i+l2) / 10;
+			j += 1;
+		}
+
+		if (carryBit != 0)
+			res.addItemToList(carryBit);
+		return res;
+	}
+
+	/*public static Num power(Num num, Num pow) {
+		Num res = new Num(1);
+		long temp;
+
+		long powLong = numToLong(pow);
+		if(pow.getItemSize() == 1 && pow.getDigitByIndex(0) == 0)
+			return res;
+//		temp = power(num, pow/2);
+		if (pow % 2 == 0) {
+			temp *= temp;
+			res.addItemToList(temp);
+			return res;
+		}
+		else {
+			temp *= temp;
+			temp = product(temp, num);
+			res.addItemToList(temp);
+			return res;
+		}
+	}*/
+
 	private static Num evaluateExp(String postFixArr) {
 		return null;
 	}
@@ -167,7 +262,7 @@ public class Num {
 
 				case 3:
 					System.out.println("Multiplication");
-//					result = product(x, y);
+					result = product(x, y);
 					break;
 				case 4:
 					System.out.println("Division");
@@ -184,7 +279,7 @@ public class Num {
 					break;
 				case 6:
 					System.out.println("Power");
-//					result = power(x, input2);
+					result = power(x, input2);
 					break;
 				default:
 					throw new Exception("Enter a valid input");
@@ -338,6 +433,7 @@ public class Num {
 			digitList.add(new Long(number % 10));
 			number = number / 10;
 		}
+		System.out.println("number >> " + number);
 	}
 
 	public Num(String s) {
@@ -349,6 +445,7 @@ public class Num {
 		for (int i = s.length() - 1; i >= 0; i--) {
 			digitList.add(Long.parseLong(s.substring(i, i + 1)));
 		}
+		System.out.println("digitList >> " + digitList);
 	}
 
 	public void addItemToList(long item) {
@@ -385,5 +482,4 @@ public class Num {
 	public void updateItemInIndex(int index, long newItem) {
 		digitList.set(index, newItem);
 	}
-
 }

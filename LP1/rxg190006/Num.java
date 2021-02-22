@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 
-public class Num {
+public class Num implements Comparable<Num> {
 
 	public static final int base = 10;
 	List<Long> digitList;
@@ -174,6 +174,62 @@ public class Num {
 		}
 	}*/
 
+	private static boolean minus;
+	public static Num divide(Num a, Num b) {
+		Num res = new Num(0);
+		Num zero = new Num(0);
+
+		int l1 = a.getItemSize();
+		int l2 = b.getItemSize();
+
+		if(b.compareTo(zero) == 0) {
+			return null;
+		}
+
+		if((l1<0 && l2<0) || (l1>0 && l2>0)) {
+			minus = false;
+		} else if(l1<0 || l2<0) {
+			minus = true;
+		}
+
+		long dividend = Math.abs(numToLong(a));
+		long divisor = Math.abs(numToLong(b));
+
+		long lo = 1;
+		long hi = dividend;
+
+		while(lo<=hi) {
+			long mid = lo + (hi-lo)/2;
+			if(mid<=(dividend/divisor) && mid+1>(dividend/divisor)) {
+				return new Num(minus ? -mid : mid);
+			} else if(mid>(dividend/divisor)) {
+				hi = mid - 1;
+			} else {
+				lo = mid + 1;
+			}
+		}
+		return res;
+	}
+
+	public static Num mod(Num a, Num b) {
+		Num zero = new Num(0);
+		Num one = new Num(1);
+
+		if(b.compareTo(zero) == 0) {
+			return null;
+		}
+
+		if(b.compareTo(one) == 0) {
+			return a;
+		}
+
+		Num quotient = divide(a, b);
+		Num product = product(quotient, b);
+		Num remainder = subtract(a, product);
+
+		return remainder;
+	}
+
 	private static Num evaluateExp(String postFixArr) {
 		return null;
 	}
@@ -266,21 +322,22 @@ public class Num {
 					break;
 				case 4:
 					System.out.println("Division");
-					if (input2 != 0) {
-//						result = division(x, y);
-					} else {
-						result = new Num(0);
-					}
+//					if (input2 != 0) {
+//						result = divide(x, y);
+//					} else {
+//						result = new Num(0);
+//					}
+					result = divide(x, y);
 					break;
 
 				case 5:
 					System.out.println("Mod");
-//					result = mod(x, y);
+					result = mod(x, y);
 					break;
-				case 6:
-					System.out.println("Power");
-					result = power(x, input2);
-					break;
+//				case 6:
+//					System.out.println("Power");
+//					result = power(x, input2);
+//					break;
 				default:
 					throw new Exception("Enter a valid input");
 				}
@@ -481,5 +538,30 @@ public class Num {
 
 	public void updateItemInIndex(int index, long newItem) {
 		digitList.set(index, newItem);
+	}
+
+	public int compareTo(Num other) {
+		// When lengths are unequal
+		if (this.getItemSize() < other.getItemSize()) {
+			return 1;
+		}
+		if (other.getItemSize() < this.getItemSize()) {
+			return -1;
+		} else {
+			// When same length, look for greatest highest significant digit
+			int index = this.getItemSize() - 1;
+			while (index > -1) {
+				// Inequality check: this < other
+				if (this.digitList.get(index) < other.digitList.get(index))
+					return 1;
+
+				// Inequality check: other < this
+				if (other.digitList.get(index) < this.digitList.get(index))
+					return -1;
+				index--;
+			}
+		}
+		// When Equal Numbers
+		return 0;
 	}
 }

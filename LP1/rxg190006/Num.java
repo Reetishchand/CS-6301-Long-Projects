@@ -153,26 +153,29 @@ public class Num implements Comparable<Num> {
 		return res;
 	}
 
-	/*public static Num power(Num num, Num pow) {
+	public static Num power(Num x, long n) {
 		Num res = new Num(1);
-		long temp;
+		Num temp;
 
-		long powLong = numToLong(pow);
+		Num pow = new Num(n);
 		if(pow.getItemSize() == 1 && pow.getDigitByIndex(0) == 0)
 			return res;
-//		temp = power(num, pow/2);
-		if (pow % 2 == 0) {
-			temp *= temp;
-			res.addItemToList(temp);
+
+		Num mid = new Num(2);
+		Num tempPow =  divide(pow, mid);
+		if (tempPow.getItemSize() > 0)
+			res = power(x,numToLong(tempPow));
+
+		if (mod(pow, mid).getDigitByIndex(0) == 0) {
+			res = product(res, res);
 			return res;
 		}
 		else {
-			temp *= temp;
-			temp = product(temp, num);
-			res.addItemToList(temp);
+			res = product(res, res);
+			res = product(res, x);
 			return res;
 		}
-	}*/
+	}
 
 	private static boolean minus;
 	public static Num divide(Num a, Num b) {
@@ -334,10 +337,10 @@ public class Num implements Comparable<Num> {
 					System.out.println("Mod");
 					result = mod(x, y);
 					break;
-//				case 6:
-//					System.out.println("Power");
-//					result = power(x, input2);
-//					break;
+				case 6:
+					System.out.println("Power");
+					result = power(x, input2);
+					break;
 				default:
 					throw new Exception("Enter a valid input");
 				}

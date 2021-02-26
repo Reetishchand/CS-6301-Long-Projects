@@ -9,10 +9,7 @@
 
 package LP1.rxg190006;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.util.Stack;
+import java.util.*;
 
 public class Num implements Comparable<Num> {
 
@@ -173,7 +170,7 @@ public class Num implements Comparable<Num> {
         Num temp;
         Num pow = new Num(n);
 
-        if(pow.getItemSize() == 1 && pow.getDigitByIndex(0) == 0)
+        if(n == 0)
             return res;
 
         Num mid = new Num(2);
@@ -231,6 +228,7 @@ public class Num implements Comparable<Num> {
                 lo = mid + 1;
             }
         }
+
         return zero;
     }
 
@@ -273,35 +271,34 @@ public class Num implements Comparable<Num> {
      * @return : Num
      */
     public static Num evaluatePostFix(String[] postFixArr) {
-        Stack<Num> numberStack = new Stack<>();
-        for (int i = 0; i < postFixArr.length; i++) {
+        ArrayDeque<Num> numberStack = new ArrayDeque<>();
+
+        for(int i=0 ; i<postFixArr.length ; i++){
             char current = postFixArr[i].charAt(0);
-            if (Character.isDigit(current))
-                numberStack.push(new Num(new Long(current)));
-            else {
+            if(Character.isDigit(current)){
+                numberStack.push(new Num(postFixArr[i]));
+            }
+            else{
+                System.out.println("numberStack >> " + numberStack);
                 Num n1 = numberStack.pop();
                 Num n2 = numberStack.pop();
+
                 switch (current) {
                     case '+':
-                    	numberStack.push(add(n1,n2));
+                    	numberStack.push(add(n2,n1));
                         break;
-
                     case '-':
-                    	numberStack.push(subtract(n1,n2));
+                    	numberStack.push(subtract(n2,n1));
                         break;
-
                     case '/':
-                    	numberStack.push(divide(n1,n2));
+                    	numberStack.push(divide(n2,n1));
                         break;
-
                     case '*':
-                    	numberStack.push(product(n1,n2));
+                    	numberStack.push(product(n2,n1));
                         break;
-
                     case '%':
-                    	numberStack.push(mod(n1,n2));
+                    	numberStack.push(mod(n2,n1));
                         break;
-
 //                    case '^':
 //                    	numberStack.push(power(n1,n2));
 //                        break;

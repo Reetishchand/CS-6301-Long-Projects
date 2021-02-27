@@ -18,6 +18,24 @@ public class Num implements Comparable<Num> {
     boolean isNumberNegative = false;
 
     /*
+     * returns base
+     * @return base
+     */
+    public long base() { return base; }
+
+    /*
+     * Converts given Num object to new base
+     * @param newBase number equal to "this" number, in base=newBase
+     * @return result number in new base
+     */
+//    public Num convertBase(long newBase) {
+//        Num thisNum = new Num(String.valueOf(this.digitList));
+//        long[] newNum = convertBase(thisNum.digitList,thisNum.base,newBase);
+//        Num result = new Num(newNum,newBase);
+//        return result;
+//    }
+
+    /*
      * Utility method to add two numbers
 	 * @param a
 	 * @param b
@@ -34,9 +52,29 @@ public class Num implements Comparable<Num> {
             res = b;
         else
             res = a;
-        long temp;
+        long temp = 0;
         while (l1 > i && l2 > j) {
-            temp = a.getDigitByIndex(i) + b.getDigitByIndex(j) + carryBit;
+            if (a.isNumberNegative && !b.isNumberNegative) {
+                //For avoiding double check in subtract and infinite loop
+                a.isNumberNegative = false;
+                b.isNumberNegative = false;
+                return subtract(b,a);
+            }
+            else if (!a.isNumberNegative && b.isNumberNegative) {
+                //For avoiding double check in subtract and infinite loop
+                a.isNumberNegative = false;
+                b.isNumberNegative = false;
+                return subtract(a,b);
+            }
+            else if (a.isNumberNegative && b.isNumberNegative) {
+                temp = a.getDigitByIndex(i) + b.getDigitByIndex(j) + carryBit;
+                res.isNumberNegative = true;
+            }
+            else if (!a.isNumberNegative && !b.isNumberNegative) {
+                temp = a.getDigitByIndex(i) + b.getDigitByIndex(j) + carryBit;
+                res.isNumberNegative = false;
+            }
+
             if (temp > 9) {
                 carryBit = 1;
                 temp = temp - 10;
@@ -154,8 +192,16 @@ public class Num implements Comparable<Num> {
             j += 1;
         }
 
-        if (carryBit != 0)
+        if (carryBit != 0) {
             res.addItemToList(carryBit);
+        }
+
+        if (a.isNumberNegative && b.isNumberNegative) {
+            res.isNumberNegative = false;
+        }
+        else if ((!a.isNumberNegative && b.isNumberNegative) || (a.isNumberNegative && !b.isNumberNegative)) {
+            res.isNumberNegative = true;
+        }
         return res;
     }
 
@@ -180,13 +226,20 @@ public class Num implements Comparable<Num> {
 
         if (mod(pow, mid).getDigitByIndex(0) == 0) {
             res = product(res, res);
-            return res;
+            //return res;
         }
         else {
             res = product(res, res);
             res = product(res, x);
+            //return res;
+        }
+
+        if (n < 0) {
+            Num num1 = new Num(1);
+            res =  divide(num1,res);
             return res;
         }
+        return res;
     }
 
     /*
@@ -198,6 +251,7 @@ public class Num implements Comparable<Num> {
     public static Num divide(Num a, Num b) {
         boolean minus = false;
         Num zero = new Num(0);
+        Num res = new Num(0);
 
         int l1 = a.getItemSize();
         int l2 = b.getItemSize();
@@ -221,7 +275,14 @@ public class Num implements Comparable<Num> {
         while(lo<=hi) {
             long mid = lo + (hi-lo)/2;
             if(mid<=(dividend/divisor) && mid+1>(dividend/divisor)) {
-                return new Num(minus ? -mid : mid);
+                res = new Num(minus ? -mid : mid);
+                if (a.isNumberNegative && b.isNumberNegative) {
+                    res.isNumberNegative = false;
+                }
+                else if ((!a.isNumberNegative && b.isNumberNegative) || (a.isNumberNegative && !b.isNumberNegative)) {
+                    res.isNumberNegative = true;
+                }
+                return res;
             } else if(mid>(dividend/divisor)) {
                 hi = mid - 1;
             } else {
@@ -250,9 +311,16 @@ public class Num implements Comparable<Num> {
         }
 
         Num quotient = divide(a, b);
-        Num product = product(quotient, b);
+        Num product = product(b, quotient);
         Num remainder = subtract(a, product);
 
+        if (a.isNumberNegative && !b.isNumberNegative) {
+            remainder.isNumberNegative = true;
+        } else if (a.isNumberNegative && b.isNumberNegative) {
+            remainder.isNumberNegative = true;
+        } else if (!a.isNumberNegative && b.isNumberNegative) {
+            remainder.isNumberNegative = false;
+        }
         return remainder;
     }
 
@@ -299,9 +367,9 @@ public class Num implements Comparable<Num> {
                     case '%':
                     	numberStack.push(mod(n2,n1));
                         break;
-//                    case '^':
-//                    	numberStack.push(power(n1,n2));
-//                        break;
+                    case '^':
+                    	numberStack.push(power(n2,numToLong(n1)));
+                        break;
                 }
             }
         }
@@ -322,7 +390,8 @@ public class Num implements Comparable<Num> {
                     return a.getDigitByIndex(i) > b.getDigitByIndex(i) ? 1 : 2;
                 }
             }
-        } else {
+        }
+        else {
             return l2 > l1 ? 2 : 1;
         }
         return 1;
@@ -463,14 +532,40 @@ public class Num implements Comparable<Num> {
         int i = 0, j = 0;
         int l1 = a.getItemSize(), l2 = b.getItemSize();
         long d1 = 0, d2 = 0;
+        Num res = new Num(0);
+
         while (i < l1 && j < l2) {
+            if (a.isNumberNegative && !b.isNumberNegative) {
+                //For avoiding double check in add and infinite loop
+                a.isNumberNegative = false;
+                b.isNumberNegative = false;
+                res = add(a,b);
+                res.isNumberNegative = true;
+                return res;
+            }
+            else if (!a.isNumberNegative && b.isNumberNegative) {
+                //For avoiding double check in add and infinite loop
+                a.isNumberNegative = false;
+                b.isNumberNegative = false;
+                res = add(a,b);
+                res.isNumberNegative = false;
+                return res;
+            }
+            else if (a.isNumberNegative && b.isNumberNegative) {
+                //For avoiding double check and infinite loop
+                a.isNumberNegative = false;
+                b.isNumberNegative = false;
+                res = subtract(b,a);
+                return res;
+            }
+
             long current = 0;
             d1 = a.getDigitByIndex(i);
             d2 = b.getDigitByIndex(j);
+
             if (largest == 1) {
                 d1 = d1 - borrow;
                 if (d1 >= d2) {
-
                     current = d1 - d2;
                     borrow = 0;
                 } else {
@@ -491,7 +586,6 @@ public class Num implements Comparable<Num> {
             str.append(String.valueOf(current));
             i += 1;
             j += 1;
-
         }
         while (i < l1) {
             d1 = a.getDigitByIndex(i) - borrow;
@@ -511,7 +605,6 @@ public class Num implements Comparable<Num> {
         }
         str = str.reverse();
         return new Num(str.toString());
-
     }
 
     /*

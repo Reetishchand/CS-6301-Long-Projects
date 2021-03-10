@@ -1,10 +1,8 @@
-/** Team members:
+/**
+ * Team members:
  * Reetish Chand Guntakal Patil(RXG190006)
  * Rohan Vannala(RXV190003)
- *
- */
-
-// change to your netid
+ * */
 package LP2.rxg190006;
 // YET TO REFACTOR
 
@@ -17,11 +15,7 @@ import java.io.File;
 import java.util.List;
 import java.util.LinkedList;
 import java.util.Scanner;
-/**
- * Team members:
- * Reetish Chand Guntakal Patil(RXG190006)
- * Rohan Vannala(RXV190003)
- * */
+
 public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
     private int upperbound;
      static boolean hasCycle;

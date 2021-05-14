@@ -6,12 +6,12 @@
 
 
 //FIX errors
-package LP2.rxg190006;
-import LP2.rxg190006.Graph;
-import LP2.rxg190006.Graph.Vertex;
-import LP2.rxg190006.Graph.Edge;
-import LP2.rxg190006.Graph.GraphAlgorithm;
-import LP2.rxg190006.Graph.Factory;
+package rxg190006;
+import rxg190006.Graph;
+import rxg190006.Graph.Vertex;
+import rxg190006.Graph.Edge;
+import rxg190006.Graph.GraphAlgorithm;
+import rxg190006.Graph.Factory;
 
 import java.io.File;
 import java.util.Iterator;
@@ -24,7 +24,7 @@ public class PERT extends GraphAlgorithm<PERT.PERTVertex> {
 	int timeInSeconds;
 	Vertex target;
 	int numOfCriticalNodes;
-	
+	Graph g;
     public static class PERTVertex implements Factory {
     	
     	boolean isCritical;

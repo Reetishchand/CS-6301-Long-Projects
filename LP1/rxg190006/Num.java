@@ -8,7 +8,7 @@
  *  - Dhara Patel -> dxp190051
  *  - Rohan Vannala -> rxv190003
  */
-package rxg190006;
+package LP1.rxg190006;
 
 import java.util.*;
 

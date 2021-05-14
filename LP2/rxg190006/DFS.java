@@ -3,13 +3,13 @@
  * Reetish Chand Guntakal Patil(RXG190006)
  * Rohan Vannala(RXV190003)
  * */
-package LP2.rxg190006;
+package rxg190006;
 // YET TO REFACTOR
 
-import LP2.rxg190006.Graph.Vertex;
-import LP2.rxg190006.Graph.Edge;
-import LP2.rxg190006.Graph.GraphAlgorithm;
-import LP2.rxg190006.Graph.Factory;
+import rxg190006.Graph.Vertex;
+import rxg190006.Graph.Edge;
+import rxg190006.Graph.GraphAlgorithm;
+import rxg190006.Graph.Factory;
 
 import java.io.File;
 import java.util.List;
@@ -104,7 +104,7 @@ public class DFS extends GraphAlgorithm<DFS.DFSVertex> {
     }
 
     public static void main(String[] args) throws Exception {
-        String string = "7 8   1 2 2   1 3 3   2 4 5   3 4 4   4 5 1   5 1 7   6 7 1   7 6 1 0";
+        String string = "9 13 1 2 1 2 3 1 3 1 1 3 4 1 4 5 1 5 6 1 6 3 1 4 7 1 7 8 1 8 4 1 5 7 1 7 9 1 9 5 1";
         Scanner in;
         in = args.length > 0 ? new Scanner(new File(args[0])) : new Scanner(string);
         Graph graph = Graph.readGraph(in);

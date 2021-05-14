@@ -3,7 +3,7 @@
  * Reetish Chand Guntakal Patil(RXG190006)
  * Rohan Vannala(RXV190003)
  */
-package LP2.rxg190006;
+package rxg190006;
 
 import java.util.Iterator;
 import java.util.LinkedList;

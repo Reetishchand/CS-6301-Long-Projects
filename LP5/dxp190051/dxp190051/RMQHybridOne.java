@@ -1,23 +1,67 @@
+/**
+ LP5 - RMQHybridOne.java
+ @author Umar Khalid (uxk150630)
+ @author Dhara Patel (dxp190051)
+ @author Reetish Chand (rxg190006)
+ @author Rohan Vannala (rxv190003)
+
+ Implements Hybrid One Approach for RMQ
+ */
+
 package dxp190051;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class RMQHybridOne implements RMQStructure{
-    RMQSparseBlock blk;
     RMQSparseTable rmwSparseTbl;
+    int[] blkArray;
+    int blkSize;
+    ArrayList<RMQSparseTable> sptArray;
+
+    /**
+     * Method: preProcess()
+     * Pre process for Hybrid One Approac
+     * @param arr: input arr
+     * @return
+     */
     @Override
     public void preProcess(int[] arr) {
-        blk = new RMQSparseBlock();
-        blk.preProcess(arr);
-        int[] blockMin = blk.blockArray;
+        blkSize = (int)Math.ceil(Math.sqrt(arr.length));
+        blkArray = new int[blkSize];
+        Arrays.fill(blkArray, Integer.MAX_VALUE);
+
+        for(int i = 0; i < arr.length; i++){
+            blkArray[i/ blkSize] = Math.min(arr[i], blkArray[i/ blkSize]);
+        }
+
+        sptArray = new ArrayList<RMQSparseTable>();
+
+        for(int i = 0; i < arr.length/ blkSize + 1; i++) {
+            RMQSparseTable spt = new RMQSparseTable();
+
+            int[] part = Arrays.copyOfRange(arr, i * blkSize, (i+1) * blkSize);
+            spt.preProcess(part);
+            sptArray.add(spt);
+        }
+
+        int[] blockMin = blkArray;
         rmwSparseTbl = new RMQSparseTable();
         rmwSparseTbl.preProcess(blockMin);
     }
 
+    /**
+     * Method: query()
+     * Query for Hybrid One Approach
+     * @param arr: input arr
+     * @param left: start index for finding min
+     * @param right: end index for finding min
+     * @return
+     */
     @Override
     public int query(int[] arr, int left, int right) {
-//        int left = i;
-//        int right = j;
-        int leftBlock = left/blk.blockSize;
-        int rightBlock = right/blk.blockSize;
+        int leftBlock = left/ blkSize;
+        int rightBlock = right/ blkSize;
         int min = Integer.MAX_VALUE;
 
         if(leftBlock == rightBlock){
@@ -27,28 +71,19 @@ public class RMQHybridOne implements RMQStructure{
             return min;
         }
 
-        //get blocks min except left and right blocks
-//        for(int i = leftBlock + 1; i <= rightBlock - 1; i++){
-//            min = Math.min(min, blk.blockArray[i]);
-//        }
-        min = rmwSparseTbl.query(blk.blockArray, leftBlock+1, rightBlock);
+        //get min for other blocks
+        min = rmwSparseTbl.query(blkArray, leftBlock+1, rightBlock-1);
 
-        //get left block min
-        for(int i = left; i < (leftBlock + 1) * blk.blockSize; i++){
-            min = Math.min(min,arr[i]);
-        }
+        //get min for left block
+        RMQSparseTable sptLeft = sptArray.get(leftBlock);
+        int minLeft =  sptLeft.query(arr, left % blkSize, blkSize -1);
+        min = Math.min(minLeft, min);
 
-        //get right block min
-        for(int i = rightBlock * blk.blockSize; i <= right; i++){
-            min = Math.min(min,arr[i]);
-        }
+        //get min for right block
+        RMQSparseTable sptRight = sptArray.get(rightBlock);
+        int minRight =  sptRight.query(arr, 0, right % blkSize);
+        min = Math.min(minRight, min);
 
         return min;
-
-        //        int k = (int) Math.floor(log2(j - i + 1));
-//        int left = sparseTable[i][k];
-//        int right = sparseTable[j - (int) Math.pow(2, k) + 1][k];
-//        return Math.min(left, right);
-//        return 0;
     }
 }

@@ -9,73 +9,74 @@ public class RMQDriver {
     public static Random random = new Random();
     public static int numTrials = 50;
     public static void main(String[] args) {
-	int n = 10_000_000;;
-	int choice = 4;
-	int rangeSize = 10;
+		int n = 100_000_000;
+		int choice = 4;
+		int rangePercent = 5;
+		int rangeSize = (n / 100) * rangePercent;
 
-	if(args.length > 0) { choice = Integer.parseInt(args[0]); }
-	// specify the range as % of n
-	if(args.length > 1) { rangeSize = (n / 100) * Integer.parseInt(args[1]); }
-	if(args.length > 2) { n = Integer.parseInt(args[2]); }
-	
-	if (rangeSize == 0) rangeSize = random.nextInt(n);
+		if(args.length > 0) { choice = Integer.parseInt(args[0]); }
+		// specify the range as % of n
+		if(args.length > 1) { rangeSize = (n / 100) * Integer.parseInt(args[1]); }
+		if(args.length > 2) { n = Integer.parseInt(args[2]); }
 
-	System.out.println("Choice = " + choice + " n = " + n + " rangeSize = " + rangeSize);
-	
-	int[] arr = new int[n];
-    for(int i = 0; i < n; i++) {
-	    arr[i] = n - i;
-	}
-	// shuffle the array
-	Shuffle.shuffle(arr);
-	
-	RMQStructure rmqSt = null;
-	switch(choice) {
-	case 0:	
-		rmqSt = new RMQNoPP();
-	    break;
-	case 1:	
-		//rmqSt = new RMQFullTable();
-	    break;
-	case 2:
-	    rmqSt = new RMQBlock();
-	    break;
-	case 3:
-	    rmqSt = new RMQSparseTable();
-	    break;
-	case 4:
-	    rmqSt = new RMQHybridOne();
-	    break;
-	case 5:
-	    //rmqSt = new RMQFischerHeun();
-	    break;
-	default:
-		System.out.println("Invalid choice");
-		System.exit(1);
-	}
+		if (rangeSize == 0) rangeSize = random.nextInt(n);
 
-	//pre process
-	Timer timer = new Timer();
-	timer.start();
-	rmqSt.preProcess(arr); 
-	timer.end();
-	timer.scale(numTrials);
+		System.out.println("Choice = " + choice + " n = " + n + " rangeSize = " + rangeSize);
 
-	System.out.println("Preprocessing time for Choice: " + choice + "\n" + timer);
-    
-	timer.start();
-	int begin;
-	for (int i = 0; i < numTrials; i++) {
-		begin = random.nextInt(n - rangeSize);
-		int result = rmqSt.query(arr, begin, begin+rangeSize);
-		verify(arr, begin, begin+rangeSize, result);
-		System.out.println("minimum between " + begin + " and " + (begin + rangeSize) + "is " + result);
-	}
-	timer.end();
-	timer.scale(numTrials);
+		int[] arr = new int[n];
+		for(int i = 0; i < n; i++) {
+			arr[i] = n - i;
+		}
+		// shuffle the array
+		Shuffle.shuffle(arr);
 
-	System.out.println("Query time for Choice: " + choice + "\n" + timer);
-	}
+		RMQStructure rmqSt = null;
+		switch(choice) {
+		case 0:
+			rmqSt = new RMQNoPP();
+			break;
+		case 1:
+			//rmqSt = new RMQFullTable();
+			break;
+		case 2:
+//			rmqSt = new RMQBlock();
+			break;
+		case 3:
+			rmqSt = new RMQSparseTable();
+			break;
+		case 4:
+			rmqSt = new RMQHybridOne();
+			break;
+		case 5:
+			rmqSt = new RMQFischerHeun();
+			break;
+		default:
+			System.out.println("Invalid choice");
+			System.exit(1);
+		}
+
+		//pre process
+		Timer timer = new Timer();
+		timer.start();
+		rmqSt.preProcess(arr);
+		timer.end();
+		timer.scale(numTrials);
+
+		System.out.println("Preprocessing time for Choice: " + choice + "\n" + timer);
+
+		timer.start();
+		int begin;
+		for (int i = 0; i < numTrials; i++) {
+			begin = random.nextInt(n - rangeSize);
+			int result = rmqSt.query(arr, begin, begin+rangeSize);
+			//verify(arr, begin, begin+rangeSize, result);
+			//System.out.println("minimum between " + begin + " and " + (begin + rangeSize) + "is " + result);
+		}
+		timer.end();
+		timer.scale(numTrials);
+
+		System.out.println("Query time for Choice: " + choice + "\n" + timer);
+		}
 	
 	private static void verify(int[] arr, int i, int j, int result){
 		int min = arr[i];

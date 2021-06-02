@@ -11,6 +11,4 @@ public interface RMQStructure {
 	public int query(int[] arr, int i, int j);
 
 }
-    
- 
 
